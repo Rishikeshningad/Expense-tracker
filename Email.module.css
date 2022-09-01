@@ -1,0 +1,25 @@
+.enterEmail {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    background-color:lightblue;
+    padding: 10px;
+    width: 60%;
+    margin-left: 20%;
+  }
+  .label {
+    margin: 5px;
+  }
+  
+  .label label {
+    font-size: 15px;
+  }
+  input {
+    width: 70%;
+  }
+  
+  .send {
+    width: 20%;
+    margin-top: 10px;
+    margin-left: 9px;
+  }
