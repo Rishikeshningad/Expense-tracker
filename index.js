@@ -1,12 +1,11 @@
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import { configureStore } from "@reduxjs/toolkit";
 
-import './index.css';
-import App from './App';
+import expenseReducer from "./expenseReducer";
+import authReducer from "./authReducer";
+import themeReducer from "./themeReducer";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>
-);
+const store = configureStore({
+    reducer: { expense: expenseReducer, auth: authReducer, theme: themeReducer}
+});
+
+export default store;

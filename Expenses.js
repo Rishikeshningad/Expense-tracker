@@ -1,7 +1,11 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from 'react-redux';
+
+import { expenseActions } from "../components/store/expenseReducer";
 
 const ExpenseItems = () => {
+  const TotalExpense = useSelector((state) => state.expense.totalexpense);
+
   const [price, setPrice] = useState("");
 
   const [description, setDescription] = useState("");
@@ -13,6 +17,12 @@ const ExpenseItems = () => {
   const [title, setTitle] = useState("");
 
   const [expense, setExpense] = useState([]);
+
+  const [premium, setPremium] = useState("");
+  const [premiumBtn, setPremiumBtn] = useState("");
+  const [premiumfeatures, setPremiumfeatures] = useState("");
+
+  const dispatch = useDispatch();
 
   const priceHandler = (event) => {
     setPrice(event.target.value);
@@ -82,6 +92,8 @@ const ExpenseItems = () => {
         })
         .then((data) => {
           setExpense([Expense, ...expense]);
+          dispatch(expenseActions.addingExpense(Expense));
+          dispatch(expenseActions.totalExpense(Expense.price));
         });
     }
 
@@ -89,6 +101,16 @@ const ExpenseItems = () => {
     setPrice("");
     setDescription("");
   };
+
+  useEffect(() => {
+    if (TotalExpense >= 10000){
+      setPremium(true);
+      setPremiumBtn(true);
+    } else {
+      setPremium(false);
+      setPremiumBtn(false);
+    }
+  }, [TotalExpense]);
 
   useEffect(() => {
     fetch(
@@ -111,7 +133,9 @@ const ExpenseItems = () => {
       })
       .then((data) => {
         console.log(data);
+        
         let expenseArray = [];
+        
         for (let key in data) {
           expenseArray.push({
             id: key,
@@ -119,16 +143,18 @@ const ExpenseItems = () => {
             description: data[key].description,
             price: data[key].price,
           });
+          dispatch(expenseActions.totalExpense(data[key].price));
         }
         console.log(expenseArray);
         setExpense(expenseArray);
+        dispatch(expenseActions.expense(expenseArray));
       });
-  }, []);
+  }, [dispatch]);
 
-  const deleteHandler = (id) => {
+  const deleteHandler = (id, price) => {
     console.log(id);
-    //
-
+    dispatch(expenseActions.afterDeleteExpense(price));
+   
     const updated = expense.filter((item) => {
       return item.id !== id;
     });
@@ -181,8 +207,12 @@ const ExpenseItems = () => {
       });
   };
 
+  const activatePremiumHandler = () => {
+    setPremiumfeatures(true);
+  };
+
   return (
-    <>
+    
       <div>
         <form onSubmit={addExpenseHandler}>
           <div>
@@ -214,7 +244,8 @@ const ExpenseItems = () => {
           </div>
           <button type="submit">Add Expense</button>
         </form>
-      </div>
+      
+      
       <section>
         <ul>
           {expense.map((item) => {
@@ -250,7 +281,13 @@ const ExpenseItems = () => {
           })}
         </ul>
       </section>
-    </>
+    <div>
+      <h2>Total Expense: ${TotalExpense} </h2>
+    </div>
+    {premiumBtn && premium && (<button type="button" onClick={activatePremiumHandler}>
+      Activate Premium
+      </button>)}
+    </div>
   );
 };
 
