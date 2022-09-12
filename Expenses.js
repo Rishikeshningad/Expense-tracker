@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 
 import { expenseActions } from "../components/store/expenseReducer";
+import Premium from "../pages/Premium";
 
 const ExpenseItems = () => {
   const TotalExpense = useSelector((state) => state.expense.totalexpense);
@@ -275,6 +276,9 @@ const ExpenseItems = () => {
                   >
                     Edit
                   </button>
+                  <button>
+                    Add to Cart
+                  </button>
                 </div>
               </li>
             );
@@ -287,6 +291,7 @@ const ExpenseItems = () => {
     {premiumBtn && premium && (<button type="button" onClick={activatePremiumHandler}>
       Activate Premium
       </button>)}
+      
     </div>
   );
 };
